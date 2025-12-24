@@ -65,8 +65,21 @@ function getDayName(date) {
  * Date('2024-02-13T00:00:00Z') => Date('2024-02-16T00:00:00Z')
  * Date('2024-02-16T00:00:00Z') => Date('2024-02-23T00:00:00Z')
  */
-function getNextFriday(/* date */) {
-  throw new Error('Not implemented');
+function getNextFriday(date) {
+  const dayName = new Date(date).toLocaleString('en-us', { weekday: 'long' });
+  const daysLeftBeforeNextFriday = {
+    Sunday: 5,
+    Monday: 4,
+    Tuesday: 3,
+    Wednesday: 2,
+    Thursday: 1,
+    Friday: 7,
+    Saturday: 6,
+  };
+
+  return new Date(
+    date.setDate(date.getDate() + daysLeftBeforeNextFriday[dayName])
+  );
 }
 
 /**
