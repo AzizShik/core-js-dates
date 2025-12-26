@@ -296,8 +296,62 @@ function getQuarter(date) {
  * { start: '01-01-2024', end: '15-01-2024' }, 1, 3 => ['01-01-2024', '05-01-2024', '09-01-2024', '13-01-2024']
  * { start: '01-01-2024', end: '10-01-2024' }, 1, 1 => ['01-01-2024', '03-01-2024', '05-01-2024', '07-01-2024', '09-01-2024']
  */
-function getWorkSchedule(/* period, countWorkDays, countOffDays */) {
-  throw new Error('Not implemented');
+function getWorkSchedule(period, countWorkDays, countOffDays) {
+  const { start, end } = period;
+  const resultArr = [];
+
+  function reverseDate(date) {
+    return date.split('-').reverse().join('-');
+  }
+
+  function convertDateToString(date) {
+    return `${date.getDate().toString().padStart(2, '0')}-${(
+      date.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, '0')}-${date.getFullYear().toString().padStart(2, '0')}`;
+  }
+
+  const reversedStart = reverseDate(start);
+  const reversedEnd = reverseDate(end);
+
+  const startDate = new Date(reversedStart);
+  const endDate = new Date(reversedEnd);
+
+  let tempDate = startDate;
+
+  let currentWorkStreak = 0;
+
+  while (tempDate <= endDate) {
+    const tempYear = tempDate.getFullYear();
+    const tempMonth = tempDate.getMonth();
+    let tempDay = tempDate.getDate();
+
+    if (currentWorkStreak === countWorkDays) {
+      tempDay += countOffDays + 1;
+      currentWorkStreak = 0;
+    }
+
+    if (currentWorkStreak < countWorkDays && currentWorkStreak > 0) {
+      tempDay += 1;
+      currentWorkStreak += 1;
+    }
+
+    if (currentWorkStreak === 0) {
+      currentWorkStreak += 1;
+    }
+
+    tempDate = new Date(tempYear, tempMonth, tempDay);
+
+    if (tempDate > endDate) {
+      break;
+    }
+
+    const convertedDate = convertDateToString(tempDate);
+    resultArr.push(convertedDate);
+  }
+
+  return resultArr;
 }
 
 /**
